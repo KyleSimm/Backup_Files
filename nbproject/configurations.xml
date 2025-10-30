@@ -36,10 +36,6 @@
           <itemPath>mcc_generated_files/system/interrupt.h</itemPath>
           <itemPath>mcc_generated_files/system/watchdog.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="timer" displayName="timer" projectFiles="true">
-          <itemPath>mcc_generated_files/timer/sccp2.h</itemPath>
-          <itemPath>mcc_generated_files/timer/timer_interface.h</itemPath>
-        </logicalFolder>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -75,6 +71,11 @@
             <itemPath>mcc_generated_files/adc/src/adc1.c</itemPath>
           </logicalFolder>
         </logicalFolder>
+        <logicalFolder name="examples" displayName="examples" projectFiles="true">
+          <logicalFolder name="adc_example" displayName="adc_example" projectFiles="true">
+            <itemPath>mcc_generated_files/examples/adc_example/adc_example.c</itemPath>
+          </logicalFolder>
+        </logicalFolder>
         <logicalFolder name="pwm_hs" displayName="pwm_hs" projectFiles="true">
           <logicalFolder name="src" displayName="src" projectFiles="true">
             <itemPath>mcc_generated_files/pwm_hs/src/pwm.c</itemPath>
@@ -97,11 +98,6 @@
             <itemPath>mcc_generated_files/system/src/where_was_i.s</itemPath>
             <itemPath>mcc_generated_files/system/src/traps.c</itemPath>
             <itemPath>mcc_generated_files/system/src/interrupt.c</itemPath>
-          </logicalFolder>
-        </logicalFolder>
-        <logicalFolder name="timer" displayName="timer" projectFiles="true">
-          <logicalFolder name="src" displayName="src" projectFiles="true">
-            <itemPath>mcc_generated_files/timer/src/sccp2.c</itemPath>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>

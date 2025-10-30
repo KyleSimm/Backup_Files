@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED="../../Projects Folder/CapstoneFirmware.X/pwm_driver.c" "../../Projects Folder/CapstoneFirmware.X/pwm_Lookup.c" "../../Projects Folder/CapstoneFirmware.X/vfd_Control_Loop.c" mcc_generated_files/adc/src/adc1.c mcc_generated_files/pwm_hs/src/pwm.c mcc_generated_files/spi_client/src/spi1.c mcc_generated_files/system/src/dmt.c mcc_generated_files/system/src/dmt_asm.s mcc_generated_files/system/src/reset.c mcc_generated_files/system/src/clock.c mcc_generated_files/system/src/config_bits.c mcc_generated_files/system/src/system.c mcc_generated_files/system/src/pins.c mcc_generated_files/system/src/where_was_i.s mcc_generated_files/system/src/traps.c mcc_generated_files/system/src/interrupt.c mcc_generated_files/timer/src/sccp2.c main.c spi_client.c sensor.c
+SOURCEFILES_QUOTED_IF_SPACED="../../Projects Folder/CapstoneFirmware.X/pwm_driver.c" "../../Projects Folder/CapstoneFirmware.X/pwm_Lookup.c" "../../Projects Folder/CapstoneFirmware.X/vfd_Control_Loop.c" spi_client.c sensor.c mcc_generated_files/adc/src/adc1.c mcc_generated_files/pwm_hs/src/pwm.c mcc_generated_files/spi_client/src/spi1.c mcc_generated_files/system/src/dmt.c mcc_generated_files/system/src/dmt_asm.s mcc_generated_files/system/src/reset.c mcc_generated_files/system/src/clock.c mcc_generated_files/system/src/config_bits.c mcc_generated_files/system/src/system.c mcc_generated_files/system/src/pins.c mcc_generated_files/system/src/where_was_i.s mcc_generated_files/system/src/traps.c mcc_generated_files/system/src/interrupt.c main.c mcc_generated_files/examples/adc_example/adc_example.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1514211827/pwm_driver.o ${OBJECTDIR}/_ext/1514211827/pwm_Lookup.o ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o ${OBJECTDIR}/mcc_generated_files/adc/src/adc1.o ${OBJECTDIR}/mcc_generated_files/pwm_hs/src/pwm.o ${OBJECTDIR}/mcc_generated_files/spi_client/src/spi1.o ${OBJECTDIR}/mcc_generated_files/system/src/dmt.o ${OBJECTDIR}/mcc_generated_files/system/src/dmt_asm.o ${OBJECTDIR}/mcc_generated_files/system/src/reset.o ${OBJECTDIR}/mcc_generated_files/system/src/clock.o ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.o ${OBJECTDIR}/mcc_generated_files/system/src/system.o ${OBJECTDIR}/mcc_generated_files/system/src/pins.o ${OBJECTDIR}/mcc_generated_files/system/src/where_was_i.o ${OBJECTDIR}/mcc_generated_files/system/src/traps.o ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o ${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o ${OBJECTDIR}/main.o ${OBJECTDIR}/spi_client.o ${OBJECTDIR}/sensor.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1514211827/pwm_driver.o.d ${OBJECTDIR}/_ext/1514211827/pwm_Lookup.o.d ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o.d ${OBJECTDIR}/mcc_generated_files/adc/src/adc1.o.d ${OBJECTDIR}/mcc_generated_files/pwm_hs/src/pwm.o.d ${OBJECTDIR}/mcc_generated_files/spi_client/src/spi1.o.d ${OBJECTDIR}/mcc_generated_files/system/src/dmt.o.d ${OBJECTDIR}/mcc_generated_files/system/src/dmt_asm.o.d ${OBJECTDIR}/mcc_generated_files/system/src/reset.o.d ${OBJECTDIR}/mcc_generated_files/system/src/clock.o.d ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.o.d ${OBJECTDIR}/mcc_generated_files/system/src/system.o.d ${OBJECTDIR}/mcc_generated_files/system/src/pins.o.d ${OBJECTDIR}/mcc_generated_files/system/src/where_was_i.o.d ${OBJECTDIR}/mcc_generated_files/system/src/traps.o.d ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o.d ${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/spi_client.o.d ${OBJECTDIR}/sensor.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1514211827/pwm_driver.o ${OBJECTDIR}/_ext/1514211827/pwm_Lookup.o ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o ${OBJECTDIR}/spi_client.o ${OBJECTDIR}/sensor.o ${OBJECTDIR}/mcc_generated_files/adc/src/adc1.o ${OBJECTDIR}/mcc_generated_files/pwm_hs/src/pwm.o ${OBJECTDIR}/mcc_generated_files/spi_client/src/spi1.o ${OBJECTDIR}/mcc_generated_files/system/src/dmt.o ${OBJECTDIR}/mcc_generated_files/system/src/dmt_asm.o ${OBJECTDIR}/mcc_generated_files/system/src/reset.o ${OBJECTDIR}/mcc_generated_files/system/src/clock.o ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.o ${OBJECTDIR}/mcc_generated_files/system/src/system.o ${OBJECTDIR}/mcc_generated_files/system/src/pins.o ${OBJECTDIR}/mcc_generated_files/system/src/where_was_i.o ${OBJECTDIR}/mcc_generated_files/system/src/traps.o ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o ${OBJECTDIR}/main.o ${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1514211827/pwm_driver.o.d ${OBJECTDIR}/_ext/1514211827/pwm_Lookup.o.d ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o.d ${OBJECTDIR}/spi_client.o.d ${OBJECTDIR}/sensor.o.d ${OBJECTDIR}/mcc_generated_files/adc/src/adc1.o.d ${OBJECTDIR}/mcc_generated_files/pwm_hs/src/pwm.o.d ${OBJECTDIR}/mcc_generated_files/spi_client/src/spi1.o.d ${OBJECTDIR}/mcc_generated_files/system/src/dmt.o.d ${OBJECTDIR}/mcc_generated_files/system/src/dmt_asm.o.d ${OBJECTDIR}/mcc_generated_files/system/src/reset.o.d ${OBJECTDIR}/mcc_generated_files/system/src/clock.o.d ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.o.d ${OBJECTDIR}/mcc_generated_files/system/src/system.o.d ${OBJECTDIR}/mcc_generated_files/system/src/pins.o.d ${OBJECTDIR}/mcc_generated_files/system/src/where_was_i.o.d ${OBJECTDIR}/mcc_generated_files/system/src/traps.o.d ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1514211827/pwm_driver.o ${OBJECTDIR}/_ext/1514211827/pwm_Lookup.o ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o ${OBJECTDIR}/mcc_generated_files/adc/src/adc1.o ${OBJECTDIR}/mcc_generated_files/pwm_hs/src/pwm.o ${OBJECTDIR}/mcc_generated_files/spi_client/src/spi1.o ${OBJECTDIR}/mcc_generated_files/system/src/dmt.o ${OBJECTDIR}/mcc_generated_files/system/src/dmt_asm.o ${OBJECTDIR}/mcc_generated_files/system/src/reset.o ${OBJECTDIR}/mcc_generated_files/system/src/clock.o ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.o ${OBJECTDIR}/mcc_generated_files/system/src/system.o ${OBJECTDIR}/mcc_generated_files/system/src/pins.o ${OBJECTDIR}/mcc_generated_files/system/src/where_was_i.o ${OBJECTDIR}/mcc_generated_files/system/src/traps.o ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o ${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o ${OBJECTDIR}/main.o ${OBJECTDIR}/spi_client.o ${OBJECTDIR}/sensor.o
+OBJECTFILES=${OBJECTDIR}/_ext/1514211827/pwm_driver.o ${OBJECTDIR}/_ext/1514211827/pwm_Lookup.o ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o ${OBJECTDIR}/spi_client.o ${OBJECTDIR}/sensor.o ${OBJECTDIR}/mcc_generated_files/adc/src/adc1.o ${OBJECTDIR}/mcc_generated_files/pwm_hs/src/pwm.o ${OBJECTDIR}/mcc_generated_files/spi_client/src/spi1.o ${OBJECTDIR}/mcc_generated_files/system/src/dmt.o ${OBJECTDIR}/mcc_generated_files/system/src/dmt_asm.o ${OBJECTDIR}/mcc_generated_files/system/src/reset.o ${OBJECTDIR}/mcc_generated_files/system/src/clock.o ${OBJECTDIR}/mcc_generated_files/system/src/config_bits.o ${OBJECTDIR}/mcc_generated_files/system/src/system.o ${OBJECTDIR}/mcc_generated_files/system/src/pins.o ${OBJECTDIR}/mcc_generated_files/system/src/where_was_i.o ${OBJECTDIR}/mcc_generated_files/system/src/traps.o ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o ${OBJECTDIR}/main.o ${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o
 
 # Source Files
-SOURCEFILES=../../Projects Folder/CapstoneFirmware.X/pwm_driver.c ../../Projects Folder/CapstoneFirmware.X/pwm_Lookup.c ../../Projects Folder/CapstoneFirmware.X/vfd_Control_Loop.c mcc_generated_files/adc/src/adc1.c mcc_generated_files/pwm_hs/src/pwm.c mcc_generated_files/spi_client/src/spi1.c mcc_generated_files/system/src/dmt.c mcc_generated_files/system/src/dmt_asm.s mcc_generated_files/system/src/reset.c mcc_generated_files/system/src/clock.c mcc_generated_files/system/src/config_bits.c mcc_generated_files/system/src/system.c mcc_generated_files/system/src/pins.c mcc_generated_files/system/src/where_was_i.s mcc_generated_files/system/src/traps.c mcc_generated_files/system/src/interrupt.c mcc_generated_files/timer/src/sccp2.c main.c spi_client.c sensor.c
+SOURCEFILES=../../Projects Folder/CapstoneFirmware.X/pwm_driver.c ../../Projects Folder/CapstoneFirmware.X/pwm_Lookup.c ../../Projects Folder/CapstoneFirmware.X/vfd_Control_Loop.c spi_client.c sensor.c mcc_generated_files/adc/src/adc1.c mcc_generated_files/pwm_hs/src/pwm.c mcc_generated_files/spi_client/src/spi1.c mcc_generated_files/system/src/dmt.c mcc_generated_files/system/src/dmt_asm.s mcc_generated_files/system/src/reset.c mcc_generated_files/system/src/clock.c mcc_generated_files/system/src/config_bits.c mcc_generated_files/system/src/system.c mcc_generated_files/system/src/pins.c mcc_generated_files/system/src/where_was_i.s mcc_generated_files/system/src/traps.c mcc_generated_files/system/src/interrupt.c main.c mcc_generated_files/examples/adc_example/adc_example.c
 
 
 
@@ -106,6 +106,18 @@ ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o: ../../Projects\ Folder/Capstone
 	@${RM} ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  "../../Projects Folder/CapstoneFirmware.X/vfd_Control_Loop.c"  -o ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+	
+${OBJECTDIR}/spi_client.o: spi_client.c  .generated_files/flags/default/87d9d56a95fb4d4de9dab9a677622df70c008f42 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/spi_client.o.d 
+	@${RM} ${OBJECTDIR}/spi_client.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  spi_client.c  -o ${OBJECTDIR}/spi_client.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/spi_client.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+	
+${OBJECTDIR}/sensor.o: sensor.c  .generated_files/flags/default/23f556a9634d264676a4ca1678567d921d573ec7 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/sensor.o.d 
+	@${RM} ${OBJECTDIR}/sensor.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  sensor.c  -o ${OBJECTDIR}/sensor.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/sensor.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
 	
 ${OBJECTDIR}/mcc_generated_files/adc/src/adc1.o: mcc_generated_files/adc/src/adc1.c  .generated_files/flags/default/41885e6f8530464919df9e912ad10d373e23261 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/adc/src" 
@@ -173,29 +185,17 @@ ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o: mcc_generated_files/sys
 	@${RM} ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  mcc_generated_files/system/src/interrupt.c  -o ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
 	
-${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o: mcc_generated_files/timer/src/sccp2.c  .generated_files/flags/default/c4372360d95567e408254006db58d7f4d4a0f00e .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/timer/src" 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o.d 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  mcc_generated_files/timer/src/sccp2.c  -o ${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
-	
 ${OBJECTDIR}/main.o: main.c  .generated_files/flags/default/fdc2248a29c6391ab727e573f5835ef4adb3cf6d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  main.c  -o ${OBJECTDIR}/main.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/main.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
 	
-${OBJECTDIR}/spi_client.o: spi_client.c  .generated_files/flags/default/87d9d56a95fb4d4de9dab9a677622df70c008f42 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/spi_client.o.d 
-	@${RM} ${OBJECTDIR}/spi_client.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  spi_client.c  -o ${OBJECTDIR}/spi_client.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/spi_client.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
-	
-${OBJECTDIR}/sensor.o: sensor.c  .generated_files/flags/default/23f556a9634d264676a4ca1678567d921d573ec7 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/sensor.o.d 
-	@${RM} ${OBJECTDIR}/sensor.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  sensor.c  -o ${OBJECTDIR}/sensor.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/sensor.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o: mcc_generated_files/examples/adc_example/adc_example.c  .generated_files/flags/default/b6a6127a2fc75206f6b80fd45d23e9e1ff9d7104 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/examples/adc_example" 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o.d 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  mcc_generated_files/examples/adc_example/adc_example.c  -o ${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_SIMULATOR=1  -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
 	
 else
 ${OBJECTDIR}/_ext/1514211827/pwm_driver.o: ../../Projects\ Folder/CapstoneFirmware.X/pwm_driver.c  .generated_files/flags/default/7224814a2d556c542439e2849b706c16e372422b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
@@ -215,6 +215,18 @@ ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o: ../../Projects\ Folder/Capstone
 	@${RM} ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  "../../Projects Folder/CapstoneFirmware.X/vfd_Control_Loop.c"  -o ${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/_ext/1514211827/vfd_Control_Loop.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+	
+${OBJECTDIR}/spi_client.o: spi_client.c  .generated_files/flags/default/30469cb6083486245a1078c1f617bd3d61558c37 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/spi_client.o.d 
+	@${RM} ${OBJECTDIR}/spi_client.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  spi_client.c  -o ${OBJECTDIR}/spi_client.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/spi_client.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+	
+${OBJECTDIR}/sensor.o: sensor.c  .generated_files/flags/default/9cc7a21f6067d17c27f090136ca8bd7cde926694 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/sensor.o.d 
+	@${RM} ${OBJECTDIR}/sensor.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  sensor.c  -o ${OBJECTDIR}/sensor.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/sensor.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
 	
 ${OBJECTDIR}/mcc_generated_files/adc/src/adc1.o: mcc_generated_files/adc/src/adc1.c  .generated_files/flags/default/2e92cd19d5348e61b4fc69fd0b51d073935aaa78 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/adc/src" 
@@ -282,29 +294,17 @@ ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o: mcc_generated_files/sys
 	@${RM} ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  mcc_generated_files/system/src/interrupt.c  -o ${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/mcc_generated_files/system/src/interrupt.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
 	
-${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o: mcc_generated_files/timer/src/sccp2.c  .generated_files/flags/default/d77bec8121d7369db2ae7dc5bcd9bd5e77ac18ae .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/timer/src" 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o.d 
-	@${RM} ${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  mcc_generated_files/timer/src/sccp2.c  -o ${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/mcc_generated_files/timer/src/sccp2.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
-	
 ${OBJECTDIR}/main.o: main.c  .generated_files/flags/default/825f5a018d023514976bd0c60d0adcca043c6cb8 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  main.c  -o ${OBJECTDIR}/main.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/main.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
 	
-${OBJECTDIR}/spi_client.o: spi_client.c  .generated_files/flags/default/30469cb6083486245a1078c1f617bd3d61558c37 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/spi_client.o.d 
-	@${RM} ${OBJECTDIR}/spi_client.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  spi_client.c  -o ${OBJECTDIR}/spi_client.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/spi_client.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
-	
-${OBJECTDIR}/sensor.o: sensor.c  .generated_files/flags/default/9cc7a21f6067d17c27f090136ca8bd7cde926694 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/sensor.o.d 
-	@${RM} ${OBJECTDIR}/sensor.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  sensor.c  -o ${OBJECTDIR}/sensor.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/sensor.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o: mcc_generated_files/examples/adc_example/adc_example.c  .generated_files/flags/default/2022801dc85c0ad034c57822c04553f0b6ca867c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/mcc_generated_files/examples/adc_example" 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o.d 
+	@${RM} ${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  mcc_generated_files/examples/adc_example/adc_example.c  -o ${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/mcc_generated_files/examples/adc_example/adc_example.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
 	
 endif
 

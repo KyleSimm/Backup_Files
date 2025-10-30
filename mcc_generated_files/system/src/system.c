@@ -37,7 +37,6 @@
 #include "../../adc/adc1.h"
 #include "../dmt.h"
 #include "../../pwm_hs/pwm.h"
-#include "../../timer/sccp2.h"
 #include "../../spi_client/spi1.h"
 #include "../interrupt.h"
 
@@ -49,7 +48,6 @@ void SYSTEM_Initialize(void)
     ADC1_Initialize();
     DMT_Initialize();
     PWM_Initialize();
-    SCCP2_Timer_Initialize();
     SPI1_Initialize();
     INTERRUPT_GlobalEnable();
     INTERRUPT_Initialize();

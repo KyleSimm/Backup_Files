@@ -125,10 +125,10 @@ void PWM_Initialize (void)
     PG1DC = 0x0U;
     // DCA1 0x0; 
     PG1DCA = 0x0U;
-    // DTH1 2; 
-    PG1DTH = 0x2U;
-    // DTL1 2; 
-    PG1DTL = 0x2U;
+    // DTH1 40; 
+    PG1DTH = 0x28U;
+    // DTL1 40; 
+    PG1DTL = 0x28U;
     // ADTR2EN1 disabled; IEVTSEL EOC; SIEN disabled; FFIEN disabled; ADTR1OFS None; CLIEN disabled; FLTIEN disabled; ADTR2EN2 disabled; ADTR2EN3 disabled; 
     PG1EVTH = 0x0U;
     // UPDTRG Duty Cycle; ADTR1PS 1:1; PGTRGSEL EOC event; ADTR1EN3 disabled; ADTR1EN1 disabled; ADTR1EN2 disabled; 
@@ -177,10 +177,10 @@ void PWM_Initialize (void)
     PG2DC = 0x0U;
     // DCA2 0x0; 
     PG2DCA = 0x0U;
-    // DTH2 2; 
-    PG2DTH = 0x2U;
-    // DTL2 2; 
-    PG2DTL = 0x2U;
+    // DTH2 40; 
+    PG2DTH = 0x28U;
+    // DTL2 40; 
+    PG2DTL = 0x28U;
     // ADTR2EN1 disabled; IEVTSEL EOC; SIEN disabled; FFIEN disabled; ADTR1OFS None; CLIEN disabled; FLTIEN disabled; ADTR2EN2 disabled; ADTR2EN3 disabled; 
     PG2EVTH = 0x0U;
     // UPDTRG Duty Cycle; ADTR1PS 1:1; PGTRGSEL EOC event; ADTR1EN3 disabled; ADTR1EN1 disabled; ADTR1EN2 disabled; 
@@ -229,10 +229,10 @@ void PWM_Initialize (void)
     PG3DC = 0x0U;
     // DCA3 0x0; 
     PG3DCA = 0x0U;
-    // DTH3 2; 
-    PG3DTH = 0x2U;
-    // DTL3 2; 
-    PG3DTL = 0x2U;
+    // DTH3 40; 
+    PG3DTH = 0x28U;
+    // DTL3 40; 
+    PG3DTL = 0x28U;
     // ADTR2EN1 disabled; IEVTSEL EOC; SIEN disabled; FFIEN disabled; ADTR1OFS None; CLIEN disabled; FLTIEN disabled; ADTR2EN2 disabled; ADTR2EN3 disabled; 
     PG3EVTH = 0x0U;
     // UPDTRG Duty Cycle; ADTR1PS 1:1; PGTRGSEL EOC event; ADTR1EN3 disabled; ADTR1EN1 disabled; ADTR1EN2 disabled; 
@@ -478,7 +478,7 @@ void __attribute__ ((weak)) PWM_GeneratorEOCEventCallback ( enum PWM_GENERATOR g
 */
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt ( void )
 {
-    enum PWM_GENERATOR intGen = PWM_1;
+    enum PWM_GENERATOR intGen = PWM_GENERATOR_1;
     if(NULL != PWM_GeneratorEOCEventHandler)
     {
         (*PWM_GeneratorEOCEventHandler)(intGen);
@@ -497,7 +497,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM1Interrupt ( void )
 */
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM2Interrupt ( void )
 {
-    enum PWM_GENERATOR intGen = PWM_2;
+    enum PWM_GENERATOR intGen = PWM_GENERATOR_2;
     if(NULL != PWM_GeneratorEOCEventHandler)
     {
         (*PWM_GeneratorEOCEventHandler)(intGen);
@@ -516,7 +516,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM2Interrupt ( void )
 */
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _PWM3Interrupt ( void )
 {
-    enum PWM_GENERATOR intGen = PWM_3;
+    enum PWM_GENERATOR intGen = PWM_GENERATOR_3;
     if(NULL != PWM_GeneratorEOCEventHandler)
     {
         (*PWM_GeneratorEOCEventHandler)(intGen);

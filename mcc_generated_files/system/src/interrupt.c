@@ -83,10 +83,6 @@ void INTERRUPT_Initialize(void)
     // Priority: 1
     IPC43bits.PEVTDIP = 1;
     
-    // CCT2: CCP2 Timer Event
-    // Priority: 1
-    IPC6bits.CCT2IP = 1;
-    
 }
 
 void INTERRUPT_Deinitialize(void)
@@ -102,5 +98,4 @@ void INTERRUPT_Deinitialize(void)
     IPC42bits.PEVTBIP = 4;
     IPC42bits.PEVTCIP = 4;
     IPC43bits.PEVTDIP = 4;
-    IPC6bits.CCT2IP = 4;
 }
