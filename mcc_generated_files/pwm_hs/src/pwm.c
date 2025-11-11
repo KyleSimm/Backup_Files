@@ -121,8 +121,8 @@ void PWM_Initialize (void)
     PG1CLPCIL = 0x0U;
     // MSTEN disabled; TRIGMOD Single trigger mode; SOCS Self-trigger; UPDMOD Immediate; MPHSEL disabled; MPERSEL disabled; MDCSEL disabled; 
     PG1CONH = 0x100U;
-    // DC1 0; 
-    PG1DC = 0x0U;
+    // DC1 400; 
+    PG1DC = 0x190U;
     // DCA1 0x0; 
     PG1DCA = 0x0U;
     // DTH1 40; 
@@ -149,8 +149,8 @@ void PWM_Initialize (void)
     PG1LEBH = 0x0U;
     // LEB 0x0; 
     PG1LEBL = 0x0U;
-    // PER1 249; 
-    PG1PER = 0xF9U;
+    // PER1 799; 
+    PG1PER = 0x31FU;
     // PHASE1 0; 
     PG1PHASE = 0x0U;
     // PCIGT disabled; TQPS Not inverted; SWPCI Drives '0'; BPEN disabled; TQSS None; SWPCIM PCI acceptance logic; BPSEL PWM Generator 1; ACP Level-sensitive; 
@@ -201,8 +201,8 @@ void PWM_Initialize (void)
     PG2LEBH = 0x0U;
     // LEB 0x0; 
     PG2LEBL = 0x0U;
-    // PER2 249; 
-    PG2PER = 0xF9U;
+    // PER2 799; 
+    PG2PER = 0x31FU;
     // PHASE2 0; 
     PG2PHASE = 0x0U;
     // PCIGT disabled; TQPS Not inverted; SWPCI Drives '0'; BPEN disabled; TQSS None; SWPCIM PCI acceptance logic; BPSEL PWM Generator 1; ACP Level-sensitive; 
@@ -253,8 +253,8 @@ void PWM_Initialize (void)
     PG3LEBH = 0x0U;
     // LEB 0x0; 
     PG3LEBL = 0x0U;
-    // PER3 249; 
-    PG3PER = 0xF9U;
+    // PER3 799; 
+    PG3PER = 0x31FU;
     // PHASE3 0; 
     PG3PHASE = 0x0U;
     // PCIGT disabled; TQPS Not inverted; SWPCI Drives '0'; BPEN disabled; TQSS None; SWPCIM PCI acceptance logic; BPSEL PWM Generator 1; ACP Level-sensitive; 
@@ -291,10 +291,10 @@ void PWM_Initialize (void)
     LOGCONE = 0x0U;
     // S1FPOL Positive logic; PWMS2F PWM1H; PWMS1F PWM1H; S2FPOL Positive logic; PWMLFFD No Assignment; PWMLFF PWMS1 | PWMS2; 
     LOGCONF = 0x0U;
-    // MDC 0; 
-    MDC = 0x0U;
-    // MPER 249; 
-    MPER = 0xF9U;
+    // MDC 800; 
+    MDC = 0x320U;
+    // MPER 799; 
+    MPER = 0x31FU;
     // MPHASE 0x0; 
     MPHASE = 0x0U;
     // MCLKSEL FOSC; LOCK disabled; DIVSEL 1:2; HRERR disabled; 

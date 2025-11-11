@@ -20,21 +20,10 @@
 */
 #include "mcc_generated_files/system/system.h"
 
-//Custom Classes
 
 /*
     Main application
 */
-
-#include "xc.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-//Header/Custom Files
-#include "../CapstoneFirmware.X/vfd_Control_Loop.h" //NEED to ALTER PATH for 1024MP710
-#include "spi_client.h"
-#include "sensor.h"
 
 /* PIN MAPPING FOR dsPIC33CK1024MP710 && dsPIC33CK256MP508
  * ---|-------------|------------------|------------------|-----------------------------------------*
@@ -93,40 +82,139 @@
 /* PWM Current Settings
  *    Master Input Frequency: 8 MHz
  *    Requested Frequency 15 kHz
- *    Operation Mode: Center-Aligned
+ *    Operation Mode: Center-Aligned CHANGE
  *    PWM Output Mode: Complementary 
  *    Calculated Period: 66.671 us
- *    Calculated Frequency: 14.999 KHz
+ *    Calculated Frequency: 16 KHz
  *    Dead Time Low: 200ns
  *    Dead Time High: 200ns
  *    Data Update Settings: Immediate
  *    
  */
+
+/* Notes
+ Serial Port for printf: COM11
+ */
+#define FCY 8000000UL
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <xc.h>
+#include <libpic30.h>
+//Header/Custom Files
+#include "vfd_Control_Loop.h"
+#include "spi_client.h"
+#include "system_mode.h"
+
+
+SystemMode currentMode = MODE_INIT;  // start in idle mode
+
+
 int main(void)
 {
     SYSTEM_Initialize();
-    vfd_Init();
+    //PWM_Deinitialize();
+    spi_init();
+            
+    currentMode = MODE_INIT;
 
+    /* Loop Error?
+     * MODEON: No Issues
+     * MODEINIT: Issue inside
+     
+     */
+    printf("Entering While Loop \r\n");
     while(1)
     {
-    printf("Test");    
-    /*
-        // --- 2. Non-blocking SPI handling ---
-        if (spiDataAvailable())     // Flag set in SPI ISR or DMA
-        {
-            // Read sensor or command data
-            readSensorData();       
-        }
+        printf("Current State: %s\n", modeToString(currentMode));
+        
+        switch(currentMode){
+            printf("Inside CurrentMode \r\n");
+            case MODE_INIT:
+            
+                //Initializes PWM Channels
+                PWM_Initialize();
+                //printf("Testing if PWM Initialized \r\n");
+                vfd_Init();
+                //printf("Testing if vfd Initialized \r\n");
+                currentMode = MODE_ON;
+                printf("Switching Mode to On \r\n\n");
 
-        // --- 3. Frequency update logic ---
-        float newFreq = Freq;      // could be updated via SPI commands
-        if (newFreq != pwm_A.currentFreq)
-        {
-            vfd_SetFrequency(newFreq);  // Update step size in PWM_State structs
-        }
-    */
+                break;
+                
+            case MODE_OFF:
+                //Disable PWM Channels
+                PWM_Deinitialize();
+                //Set Duty Cycle to 0%
+                vfd_setDutyCycle(0);
+                //Change Mode
+                currentMode = MODE_IDLE;
+                printf("Turning System Off, PWM output stopped \r\n");
+                
+                break;
+                
+            case MODE_ON:
+                //Check for OFF Signal
+                spi_checkChannel();
+                //Check for new Frequency
+                //Read Sensor Data
+                spi_sendChannel();
+                //Send Sensor Data over SPI
+                
+                printf("Inside MODE_ON!\r\n \r\n");
 
+                break;
+                
+            case MODE_IDLE:
+                //Check SPI Connection for "ON" signal;
+                spi_checkChannel();  
+                printf("Code is IDle \r\n");
+                break;
+            case MODE_REVERSE:
+                printf("In Reverse Mode \r\n");
+                //Set PWM Duty Cycle to 0 percent
+                vfd_setDutyCycle(0);
+                //Set PWM to LOW:
+                // Force all PWM outputs LOW
+                PG1IOCONLbits.OVRENH = 1;
+                PG1IOCONLbits.OVRENL = 1;
+                PG1IOCONLbits.OVRDAT = 0b00;
+
+                PG2IOCONLbits.OVRENH = 1;
+                PG2IOCONLbits.OVRENL = 1;
+                PG2IOCONLbits.OVRDAT = 0b00;
+
+                PG3IOCONLbits.OVRENH = 1;
+                PG3IOCONLbits.OVRENL = 1;
+                PG3IOCONLbits.OVRDAT = 0b00;
+     
+                //Wait 2 ms.
+                 __delay_ms(3);
+                //Adjust Values
+                vfd_SetDirection(-1);
+                
+                // Release overrides
+                PG1IOCONLbits.OVRENH = 0;
+                PG1IOCONLbits.OVRENL = 0;
+
+                PG2IOCONLbits.OVRENH = 0;
+                PG2IOCONLbits.OVRENL = 0;
+
+                PG3IOCONLbits.OVRENH = 0;
+                PG3IOCONLbits.OVRENL = 0;   
+                
+                //Set Mode back to ON
+                currentMode = MODE_ON;
+                break;
+        }
+                 
+         __delay_ms(300); //So Testing printf is possible to read.
+        //Testing Code
     }
+  
     
-    return 0;    
+    
+
+    return 0;
 }

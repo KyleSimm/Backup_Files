@@ -39,7 +39,77 @@
 #include <stddef.h>
 #include "../adc1.h"
 
+// Section: File specific functions
+
+static void (*ADC1_CommonHandler)(void) = NULL;
+static void (*ADC1_ChannelHandler)(enum ADC_CHANNEL channel, uint16_t adcVal) = NULL;
+static void (*ADC1_ComparatorHandler)(enum ADC_CMP comparator) = NULL;
+
+// Section: File specific data type definitions
+
+/**
+ @ingroup  adcdriver
+ @enum     ADC_PWM_TRIG_SRCS
+ @brief    Defines the PWM ADC TRIGGER sources available for the module to use.
+*/
+enum ADC_PWM_TRIG_SRCS {
+    PWM8_TRIGGER2 = 0x13, 
+    PWM8_TRIGGER1 = 0x12, 
+    PWM7_TRIGGER2 = 0x11, 
+    PWM7_TRIGGER1 = 0x10, 
+    PWM6_TRIGGER2 = 0xf, 
+    PWM6_TRIGGER1 = 0xe, 
+    PWM5_TRIGGER2 = 0xd, 
+    PWM5_TRIGGER1 = 0xc, 
+    PWM4_TRIGGER2 = 0xb, 
+    PWM4_TRIGGER1 = 0xa, 
+    PWM3_TRIGGER2 = 0x9, 
+    PWM3_TRIGGER1 = 0x8, 
+    PWM2_TRIGGER2 = 0x7, 
+    PWM2_TRIGGER1 = 0x6, 
+    PWM1_TRIGGER2 = 0x5, 
+    PWM1_TRIGGER1 = 0x4, 
+};
+
+//Defines an object for ADC_MULTICORE.
+static const struct ADC_MULTICORE adc1Multicore = {
+    .ChannelTasks                           = &ADC1_ChannelTasks, 
+    .ComparatorTasks                        = NULL,
+    .IndividualChannelInterruptEnable       = &ADC1_IndividualChannelInterruptEnable,
+    .IndividualChannelInterruptDisable      = &ADC1_IndividualChannelInterruptDisable,
+    .IndividualChannelInterruptFlagClear    = &ADC1_IndividualChannelInterruptFlagClear,
+    .IndividualChannelInterruptPrioritySet  = &ADC1_IndividualChannelInterruptPrioritySet,
+    .ChannelCallbackRegister                = &ADC1_ChannelCallbackRegister,
+    .ComparatorCallbackRegister             = &ADC1_ComparatorCallbackRegister,
+    .CorePowerEnable                        = NULL,
+    .SharedCorePowerEnable                  = &ADC1_SharedCorePowerEnable,
+    .PWMTriggerSourceSet                    = &ADC1_PWMTriggerSourceSet
+};
+
+//Defines an object for ADC_INTERFACE.
+
+const struct ADC_INTERFACE ADC1 = {
+    .Initialize             = &ADC1_Initialize,
+    .Deinitialize           = &ADC1_Deinitialize,
+    .Enable                 = &ADC1_Enable,
+    .Disable                = &ADC1_Disable,
+    .SoftwareTriggerEnable  = &ADC1_SoftwareTriggerEnable,
+    .SoftwareTriggerDisable = &ADC1_SoftwareTriggerDisable,
+    .ChannelSelect          = &ADC1_ChannelSelect, 
+    .ConversionResultGet    = &ADC1_ConversionResultGet,
+    .IsConversionComplete   = &ADC1_IsConversionComplete,
+    .ResolutionSet          = &ADC1_ResolutionSet,
+    .InterruptEnable        = &ADC1_InterruptEnable,
+    .InterruptDisable       = &ADC1_InterruptDisable,
+    .InterruptFlagClear     = &ADC1_InterruptFlagClear,
+    .InterruptPrioritySet   = &ADC1_InterruptPrioritySet,
+    .CommonCallbackRegister = &ADC1_CommonCallbackRegister,
+    .Tasks                  = &ADC1_Tasks,
+    .adcMulticoreInterface = &adc1Multicore,
+};
+
 // Section: Driver Interface Function Definitions
+
 void ADC1_Initialize (void)
 {
     // ADSIDL disabled; ADON enabled; 
@@ -52,8 +122,8 @@ void ADC1_Initialize (void)
     ADCON2H = 0x0U;
     // CNVCHSEL AN0; SWCTRG disabled; SWLCTRG disabled; SHRSAMP disabled; SUSPCIE disabled; SUSPEND disabled; REFSEL disabled; 
     ADCON3L = 0x0U;
-    // C0EN disabled; C1EN disabled; SHREN disabled; CLKDIV 1; CLKSEL FOSC/2; 
-    ADCON3H = (uint16_t)(0x0U & 0xFF00U); //Disabling C0EN, C1EN, C2EN, C3EN and SHREN bits
+    // C0EN disabled; C1EN disabled; SHREN enabled; CLKDIV 1; CLKSEL FOSC/2; 
+    ADCON3H = (uint16_t)(0x80U & 0xFF00U); //Disabling C0EN, C1EN, C2EN, C3EN and SHREN bits
     // SAMC0EN disabled; SAMC1EN disabled; 
     ADCON4L = 0x0U;
     // C0CHS AN0; C1CHS AN1; 
@@ -204,12 +274,18 @@ void ADC1_Initialize (void)
     ADCBUF24 = 0x0U;
     // 
     ADCBUF25 = 0x0U;
+        
+    ADC1_CommonCallbackRegister(&ADC1_CommonCallback);
+    ADC1_ChannelCallbackRegister(&ADC1_ChannelCallback);
+    ADC1_ComparatorCallbackRegister(&ADC1_ComparatorCallback);
     
 
     // Setting WARMTIME bit
     ADCON5Hbits.WARMTIME = 0xF;
     // Enabling ADC Module
     ADCON1Lbits.ADON = 0x1;
+    // Enabling Power for the Shared Core
+    ADC1_SharedCorePowerEnable();
 
     //TRGSRC0 None; TRGSRC1 None; 
     ADTRIG0L = 0x0U;
@@ -217,16 +293,16 @@ void ADC1_Initialize (void)
     ADTRIG0H = 0x0U;
     //TRGSRC4 None; TRGSRC5 None; 
     ADTRIG1L = 0x0U;
-    //TRGSRC6 None; TRGSRC7 None; 
-    ADTRIG1H = 0x0U;
-    //TRGSRC8 None; TRGSRC9 None; 
-    ADTRIG2L = 0x0U;
+    //TRGSRC6 None; TRGSRC7 ADCTRG31; 
+    ADTRIG1H = 0x1F00U;
+    //TRGSRC8 ADCTRG31; TRGSRC9 None; 
+    ADTRIG2L = 0x1FU;
     //TRGSRC10 None; TRGSRC11 None; 
     ADTRIG2H = 0x0U;
-    //TRGSRC12 None; TRGSRC13 None; 
-    ADTRIG3L = 0x0U;
-    //TRGSRC14 None; TRGSRC15 None; 
-    ADTRIG3H = 0x0U;
+    //TRGSRC12 None; TRGSRC13 ADCTRG31; 
+    ADTRIG3L = 0x1F00U;
+    //TRGSRC14 ADCTRG31; TRGSRC15 ADCTRG31; 
+    ADTRIG3H = 0x1F1FU;
     //TRGSRC16 None; TRGSRC17 None; 
     ADTRIG4L = 0x0U;
     //TRGSRC18 None; TRGSRC19 None; 
@@ -242,7 +318,6 @@ void ADC1_Initialize (void)
 void ADC1_Deinitialize (void)
 {
     ADCON1Lbits.ADON = 0;
-    
     
     ADCON1L = 0x0U;
     ADCON1H = 0x60U;
@@ -340,3 +415,472 @@ void ADC1_Deinitialize (void)
     ADCBUF24 = 0x0U;
     ADCBUF25 = 0x0U;
 }
+
+
+void ADC1_SharedCorePowerEnable (void) 
+{
+    ADCON5Lbits.SHRPWR = 1;   
+    while(ADCON5Lbits.SHRRDY == 0)
+    {
+    }
+    ADCON3Hbits.SHREN = 1;   
+}
+
+static uint16_t ADC1_TriggerSourceValueGet(enum ADC_PWM_INSTANCE pwmInstance, enum ADC_PWM_TRIGGERS triggerNumber)
+{
+    uint16_t adcTriggerSourceValue = 0x0U;
+    switch(pwmInstance)
+    {
+        case ADC_PWM_GENERATOR_8:
+                if(triggerNumber == ADC_PWM_TRIGGER_1)
+                {
+                    adcTriggerSourceValue = PWM8_TRIGGER1;
+                }
+                else if(triggerNumber == ADC_PWM_TRIGGER_2)
+                {
+                    adcTriggerSourceValue = PWM8_TRIGGER2;
+                }
+                else{
+                      // Nothing to process
+                }
+                break;
+        case ADC_PWM_GENERATOR_7:
+                if(triggerNumber == ADC_PWM_TRIGGER_1)
+                {
+                    adcTriggerSourceValue = PWM7_TRIGGER1;
+                }
+                else if(triggerNumber == ADC_PWM_TRIGGER_2)
+                {
+                    adcTriggerSourceValue = PWM7_TRIGGER2;
+                }
+                else{
+                      // Nothing to process
+                }
+                break;
+        case ADC_PWM_GENERATOR_6:
+                if(triggerNumber == ADC_PWM_TRIGGER_1)
+                {
+                    adcTriggerSourceValue = PWM6_TRIGGER1;
+                }
+                else if(triggerNumber == ADC_PWM_TRIGGER_2)
+                {
+                    adcTriggerSourceValue = PWM6_TRIGGER2;
+                }
+                else{
+                      // Nothing to process
+                }
+                break;
+        case ADC_PWM_GENERATOR_5:
+                if(triggerNumber == ADC_PWM_TRIGGER_1)
+                {
+                    adcTriggerSourceValue = PWM5_TRIGGER1;
+                }
+                else if(triggerNumber == ADC_PWM_TRIGGER_2)
+                {
+                    adcTriggerSourceValue = PWM5_TRIGGER2;
+                }
+                else{
+                      // Nothing to process
+                }
+                break;
+        case ADC_PWM_GENERATOR_4:
+                if(triggerNumber == ADC_PWM_TRIGGER_1)
+                {
+                    adcTriggerSourceValue = PWM4_TRIGGER1;
+                }
+                else if(triggerNumber == ADC_PWM_TRIGGER_2)
+                {
+                    adcTriggerSourceValue = PWM4_TRIGGER2;
+                }
+                else{
+                      // Nothing to process
+                }
+                break;
+        case ADC_PWM_GENERATOR_3:
+                if(triggerNumber == ADC_PWM_TRIGGER_1)
+                {
+                    adcTriggerSourceValue = PWM3_TRIGGER1;
+                }
+                else if(triggerNumber == ADC_PWM_TRIGGER_2)
+                {
+                    adcTriggerSourceValue = PWM3_TRIGGER2;
+                }
+                else{
+                      // Nothing to process
+                }
+                break;
+        case ADC_PWM_GENERATOR_2:
+                if(triggerNumber == ADC_PWM_TRIGGER_1)
+                {
+                    adcTriggerSourceValue = PWM2_TRIGGER1;
+                }
+                else if(triggerNumber == ADC_PWM_TRIGGER_2)
+                {
+                    adcTriggerSourceValue = PWM2_TRIGGER2;
+                }
+                else{
+                      // Nothing to process
+                }
+                break;
+        case ADC_PWM_GENERATOR_1:
+                if(triggerNumber == ADC_PWM_TRIGGER_1)
+                {
+                    adcTriggerSourceValue = PWM1_TRIGGER1;
+                }
+                else if(triggerNumber == ADC_PWM_TRIGGER_2)
+                {
+                    adcTriggerSourceValue = PWM1_TRIGGER2;
+                }
+                else{
+                      // Nothing to process
+                }
+                break;
+         default:
+                break;
+    }
+    return adcTriggerSourceValue;
+}
+
+void ADC1_PWMTriggerSourceSet(enum ADC_CHANNEL channel, enum ADC_PWM_INSTANCE pwmInstance, enum ADC_PWM_TRIGGERS triggerNumber)
+{
+    uint16_t adcTriggerValue;
+    adcTriggerValue= ADC1_TriggerSourceValueGet(pwmInstance, triggerNumber);
+    switch(channel)
+    {
+        case curU:
+                ADTRIG1Hbits.TRGSRC7 = adcTriggerValue;
+                break;
+        case CurV:
+                ADTRIG2Lbits.TRGSRC8 = adcTriggerValue;
+                break;
+        case CurW:
+                ADTRIG3Lbits.TRGSRC13 = adcTriggerValue;
+                break;
+        case Temp:
+                ADTRIG3Hbits.TRGSRC14 = adcTriggerValue;
+                break;
+        case ICRIP:
+                ADTRIG3Hbits.TRGSRC15 = adcTriggerValue;
+                break;
+        default:
+                break;
+    }
+}
+
+void ADC1_CommonCallbackRegister(void(*callback)(void))
+{
+    if(NULL != callback)
+    {
+        ADC1_CommonHandler = callback;
+    }
+}
+
+void __attribute__ ((weak)) ADC1_CommonCallback (void)
+{ 
+
+} 
+
+
+/* cppcheck-suppress misra-c2012-8.4
+*
+* (Rule 8.4) REQUIRED: A compatible declaration shall be visible when an object or 
+* function with external linkage is defined
+*
+* Reasoning: Interrupt declaration are provided by compiler and are available
+* outside the driver folder
+*/
+void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCInterrupt ( void )
+{
+    uint16_t adcVal;
+    if(NULL != ADC1_CommonHandler)
+    {
+        (*ADC1_CommonHandler)();
+    }
+    
+    if(IFS6bits.ADCAN7IF == 1)
+    {
+        //Read the ADC value from the ADCBUF before clearing interrupt
+        adcVal = ADCBUF7;
+        if(NULL != ADC1_ChannelHandler)
+        {
+            (*ADC1_ChannelHandler)(curU, adcVal);
+        }
+        IFS6bits.ADCAN7IF = 0;
+    }
+    if(IFS6bits.ADCAN8IF == 1)
+    {
+        //Read the ADC value from the ADCBUF before clearing interrupt
+        adcVal = ADCBUF8;
+        if(NULL != ADC1_ChannelHandler)
+        {
+            (*ADC1_ChannelHandler)(CurV, adcVal);
+        }
+        IFS6bits.ADCAN8IF = 0;
+    }
+    if(IFS6bits.ADCAN13IF == 1)
+    {
+        //Read the ADC value from the ADCBUF before clearing interrupt
+        adcVal = ADCBUF13;
+        if(NULL != ADC1_ChannelHandler)
+        {
+            (*ADC1_ChannelHandler)(CurW, adcVal);
+        }
+        IFS6bits.ADCAN13IF = 0;
+    }
+    if(IFS6bits.ADCAN14IF == 1)
+    {
+        //Read the ADC value from the ADCBUF before clearing interrupt
+        adcVal = ADCBUF14;
+        if(NULL != ADC1_ChannelHandler)
+        {
+            (*ADC1_ChannelHandler)(Temp, adcVal);
+        }
+        IFS6bits.ADCAN14IF = 0;
+    }
+    if(IFS6bits.ADCAN15IF == 1)
+    {
+        //Read the ADC value from the ADCBUF before clearing interrupt
+        adcVal = ADCBUF15;
+        if(NULL != ADC1_ChannelHandler)
+        {
+            (*ADC1_ChannelHandler)(ICRIP, adcVal);
+        }
+        IFS6bits.ADCAN15IF = 0;
+    }
+        
+    // clear the ADC1 interrupt flag
+    IFS5bits.ADCIF = 0;
+}
+
+void __attribute__ ((weak)) ADC1_Tasks ( void )
+{
+    if(IFS5bits.ADCIF == 1)
+    {
+        if(NULL != ADC1_CommonHandler)
+        {
+            (*ADC1_CommonHandler)();
+        }
+
+        // clear the ADC1 interrupt flag
+        IFS5bits.ADCIF = 0;
+    }
+}
+
+void ADC1_ChannelCallbackRegister(void(*callback)(enum ADC_CHANNEL channel, uint16_t adcVal))
+{
+    if(NULL != callback)
+    {
+        ADC1_ChannelHandler = callback;
+    }
+}
+
+void __attribute__ ((weak)) ADC1_ChannelCallback (enum ADC_CHANNEL channel, uint16_t adcVal)
+{ 
+    (void)channel;
+    (void)adcVal;
+} 
+
+
+/* cppcheck-suppress misra-c2012-8.4
+*
+* (Rule 8.4) REQUIRED: A compatible declaration shall be visible when an object or 
+* function with external linkage is defined
+*
+* Reasoning: Interrupt declaration are provided by compiler and are available
+* outside the driver folder
+*/
+void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCAN7Interrupt ( void )
+{
+    uint16_t valcurU;
+    //Read the ADC value from the ADCBUF
+    valcurU = ADCBUF7;
+
+    if(NULL != ADC1_ChannelHandler)
+    {
+        (*ADC1_ChannelHandler)(curU, valcurU);
+    }
+
+    //clear the curU interrupt flag
+    IFS6bits.ADCAN7IF = 0;
+}
+
+/* cppcheck-suppress misra-c2012-8.4
+*
+* (Rule 8.4) REQUIRED: A compatible declaration shall be visible when an object or 
+* function with external linkage is defined
+*
+* Reasoning: Interrupt declaration are provided by compiler and are available
+* outside the driver folder
+*/
+void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCAN8Interrupt ( void )
+{
+    uint16_t valCurV;
+    //Read the ADC value from the ADCBUF
+    valCurV = ADCBUF8;
+
+    if(NULL != ADC1_ChannelHandler)
+    {
+        (*ADC1_ChannelHandler)(CurV, valCurV);
+    }
+
+    //clear the CurV interrupt flag
+    IFS6bits.ADCAN8IF = 0;
+}
+
+/* cppcheck-suppress misra-c2012-8.4
+*
+* (Rule 8.4) REQUIRED: A compatible declaration shall be visible when an object or 
+* function with external linkage is defined
+*
+* Reasoning: Interrupt declaration are provided by compiler and are available
+* outside the driver folder
+*/
+void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCAN13Interrupt ( void )
+{
+    uint16_t valCurW;
+    //Read the ADC value from the ADCBUF
+    valCurW = ADCBUF13;
+
+    if(NULL != ADC1_ChannelHandler)
+    {
+        (*ADC1_ChannelHandler)(CurW, valCurW);
+    }
+
+    //clear the CurW interrupt flag
+    IFS6bits.ADCAN13IF = 0;
+}
+
+/* cppcheck-suppress misra-c2012-8.4
+*
+* (Rule 8.4) REQUIRED: A compatible declaration shall be visible when an object or 
+* function with external linkage is defined
+*
+* Reasoning: Interrupt declaration are provided by compiler and are available
+* outside the driver folder
+*/
+void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCAN14Interrupt ( void )
+{
+    uint16_t valTemp;
+    //Read the ADC value from the ADCBUF
+    valTemp = ADCBUF14;
+
+    if(NULL != ADC1_ChannelHandler)
+    {
+        (*ADC1_ChannelHandler)(Temp, valTemp);
+    }
+
+    //clear the Temp interrupt flag
+    IFS6bits.ADCAN14IF = 0;
+}
+
+/* cppcheck-suppress misra-c2012-8.4
+*
+* (Rule 8.4) REQUIRED: A compatible declaration shall be visible when an object or 
+* function with external linkage is defined
+*
+* Reasoning: Interrupt declaration are provided by compiler and are available
+* outside the driver folder
+*/
+void __attribute__ ( ( __interrupt__ , auto_psv, weak ) ) _ADCAN15Interrupt ( void )
+{
+    uint16_t valICRIP;
+    //Read the ADC value from the ADCBUF
+    valICRIP = ADCBUF15;
+
+    if(NULL != ADC1_ChannelHandler)
+    {
+        (*ADC1_ChannelHandler)(ICRIP, valICRIP);
+    }
+
+    //clear the ICRIP interrupt flag
+    IFS6bits.ADCAN15IF = 0;
+}
+
+
+
+void __attribute__ ((weak)) ADC1_ChannelTasks (enum ADC_CHANNEL channel)
+{
+    uint16_t adcVal;
+    
+    switch(channel)
+    {   
+        case curU:
+            if((bool)ADSTATLbits.AN7RDY == 1)
+            {
+                //Read the ADC value from the ADCBUF
+                adcVal = ADCBUF7;
+
+                if(NULL != ADC1_ChannelHandler)
+                {
+                    (*ADC1_ChannelHandler)(channel, adcVal);
+                }
+            }
+            break;
+        case CurV:
+            if((bool)ADSTATLbits.AN8RDY == 1)
+            {
+                //Read the ADC value from the ADCBUF
+                adcVal = ADCBUF8;
+
+                if(NULL != ADC1_ChannelHandler)
+                {
+                    (*ADC1_ChannelHandler)(channel, adcVal);
+                }
+            }
+            break;
+        case CurW:
+            if((bool)ADSTATLbits.AN13RDY == 1)
+            {
+                //Read the ADC value from the ADCBUF
+                adcVal = ADCBUF13;
+
+                if(NULL != ADC1_ChannelHandler)
+                {
+                    (*ADC1_ChannelHandler)(channel, adcVal);
+                }
+            }
+            break;
+        case Temp:
+            if((bool)ADSTATLbits.AN14RDY == 1)
+            {
+                //Read the ADC value from the ADCBUF
+                adcVal = ADCBUF14;
+
+                if(NULL != ADC1_ChannelHandler)
+                {
+                    (*ADC1_ChannelHandler)(channel, adcVal);
+                }
+            }
+            break;
+        case ICRIP:
+            if((bool)ADSTATLbits.AN15RDY == 1)
+            {
+                //Read the ADC value from the ADCBUF
+                adcVal = ADCBUF15;
+
+                if(NULL != ADC1_ChannelHandler)
+                {
+                    (*ADC1_ChannelHandler)(channel, adcVal);
+                }
+            }
+            break;
+        default:
+            break;
+    }            
+}
+
+void ADC1_ComparatorCallbackRegister(void(*callback)(enum ADC_CMP comparator))
+{
+    if(NULL != callback)
+    {
+        ADC1_ComparatorHandler = callback;
+    }
+}
+
+void __attribute__ ((weak)) ADC1_ComparatorCallback (enum ADC_CMP comparator)
+{ 
+    (void)comparator;
+} 
+
+
+

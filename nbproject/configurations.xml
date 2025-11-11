@@ -23,6 +23,10 @@
           <itemPath>mcc_generated_files/spi_client/spi_client_interface.h</itemPath>
           <itemPath>mcc_generated_files/spi_client/spi1.h</itemPath>
         </logicalFolder>
+        <logicalFolder name="spi_host" displayName="spi_host" projectFiles="true">
+          <itemPath>mcc_generated_files/spi_host/spi2.h</itemPath>
+          <itemPath>mcc_generated_files/spi_host/spi_host_interface.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="system" displayName="system" projectFiles="true">
           <itemPath>mcc_generated_files/system/dmt.h</itemPath>
           <itemPath>mcc_generated_files/system/reset_types.h</itemPath>
@@ -35,6 +39,11 @@
           <itemPath>mcc_generated_files/system/interrupt_types.h</itemPath>
           <itemPath>mcc_generated_files/system/interrupt.h</itemPath>
           <itemPath>mcc_generated_files/system/watchdog.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="uart" displayName="uart" projectFiles="true">
+          <itemPath>mcc_generated_files/uart/uart_interface.h</itemPath>
+          <itemPath>mcc_generated_files/uart/uart_types.h</itemPath>
+          <itemPath>mcc_generated_files/uart/uart2.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
@@ -52,16 +61,18 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="lib" projectFiles="true">
-        <itemPath>../../Projects Folder/CapstoneFirmware.X/pwm_driver.h</itemPath>
-        <itemPath>../../Projects Folder/CapstoneFirmware.X/pwm_driver.c</itemPath>
-        <itemPath>../../Projects Folder/CapstoneFirmware.X/pwm_Lookup.c</itemPath>
-        <itemPath>../../Projects Folder/CapstoneFirmware.X/pwm_Lookup.h</itemPath>
-        <itemPath>../../Projects Folder/CapstoneFirmware.X/vfd_Control_Loop.c</itemPath>
-        <itemPath>../../Projects Folder/CapstoneFirmware.X/vfd_Control_Loop.h</itemPath>
         <itemPath>spi_client.h</itemPath>
         <itemPath>spi_client.c</itemPath>
         <itemPath>sensor.h</itemPath>
         <itemPath>sensor.c</itemPath>
+        <itemPath>system_mode.h</itemPath>
+        <itemPath>system_mode.c</itemPath>
+        <itemPath>pwm_driver.c</itemPath>
+        <itemPath>pwm_driver.h</itemPath>
+        <itemPath>pwm_Lookup.c</itemPath>
+        <itemPath>pwm_Lookup.h</itemPath>
+        <itemPath>vfd_Control_Loop.c</itemPath>
+        <itemPath>vfd_Control_Loop.h</itemPath>
       </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
@@ -69,11 +80,6 @@
         <logicalFolder name="adc" displayName="adc" projectFiles="true">
           <logicalFolder name="src" displayName="src" projectFiles="true">
             <itemPath>mcc_generated_files/adc/src/adc1.c</itemPath>
-          </logicalFolder>
-        </logicalFolder>
-        <logicalFolder name="examples" displayName="examples" projectFiles="true">
-          <logicalFolder name="adc_example" displayName="adc_example" projectFiles="true">
-            <itemPath>mcc_generated_files/examples/adc_example/adc_example.c</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="pwm_hs" displayName="pwm_hs" projectFiles="true">
@@ -84,6 +90,11 @@
         <logicalFolder name="spi_client" displayName="spi_client" projectFiles="true">
           <logicalFolder name="src" displayName="src" projectFiles="true">
             <itemPath>mcc_generated_files/spi_client/src/spi1.c</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="spi_host" displayName="spi_host" projectFiles="true">
+          <logicalFolder name="src" displayName="src" projectFiles="true">
+            <itemPath>mcc_generated_files/spi_host/src/spi2.c</itemPath>
           </logicalFolder>
         </logicalFolder>
         <logicalFolder name="system" displayName="system" projectFiles="true">
@@ -100,13 +111,21 @@
             <itemPath>mcc_generated_files/system/src/interrupt.c</itemPath>
           </logicalFolder>
         </logicalFolder>
+        <logicalFolder name="uart" displayName="uart" projectFiles="true">
+          <logicalFolder name="src" displayName="src" projectFiles="true">
+            <itemPath>mcc_generated_files/uart/src/uart2.c</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="Test_Cases" projectFiles="true">
+        <itemPath>spi_test.c</itemPath>
+        <itemPath>spi_test.h</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
     <Elem>.</Elem>
-    <Elem>../CapstoneFirmware.X</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -116,7 +135,7 @@
         <targetDevice>dsPIC33CK256MP508</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>Simulator</platformTool>
+        <platformTool>pkob4hybrid</platformTool>
         <languageToolchain>XC16</languageToolchain>
         <languageToolchainVersion>2.10</languageToolchainVersion>
         <platform>3</platform>
@@ -327,7 +346,7 @@
         <property key="uart0io.uartioenabled" value="false"/>
         <property key="uart1io.output" value="window"/>
         <property key="uart1io.outputfile" value=""/>
-        <property key="uart1io.uartioenabled" value="false"/>
+        <property key="uart1io.uartioenabled" value="true"/>
         <property key="uart2io.output" value="window"/>
         <property key="uart2io.outputfile" value=""/>
         <property key="uart2io.uartioenabled" value="false"/>
@@ -900,7 +919,7 @@
         <property key="uart0io.uartioenabled" value="false"/>
         <property key="uart1io.output" value="window"/>
         <property key="uart1io.outputfile" value=""/>
-        <property key="uart1io.uartioenabled" value="false"/>
+        <property key="uart1io.uartioenabled" value="true"/>
         <property key="uart2io.output" value="window"/>
         <property key="uart2io.outputfile" value=""/>
         <property key="uart2io.uartioenabled" value="false"/>

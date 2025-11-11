@@ -11,7 +11,16 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+#include "mcc_generated_files/adc/adc1.h"
+    
+#define NUM_SENSORS 5
 
+extern uint16_t sensorData[NUM_SENSORS];
+extern enum ADC_CHANNEL channels[NUM_SENSORS];
+
+void updateSensorData(void);
+
+void printSensorData(void);
 
 
 

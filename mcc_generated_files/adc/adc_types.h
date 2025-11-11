@@ -54,8 +54,13 @@
 */
 enum ADC_CHANNEL
 {
-    MAX_CHANNELS = 0,    /**< MAX_CHANNELS will be removed in future MCC releases. Use ADC_MAX_CHANNELS instead */
-    ADC_MAX_CHANNELS = 0    /**< Maximum number of channels configured by user in MCC Melody User Interface */
+    curU,    /**<Channel Name:AN7   Assigned to:Shared Channel*/
+    CurV,    /**<Channel Name:AN8   Assigned to:Shared Channel*/
+    CurW,    /**<Channel Name:AN13   Assigned to:Shared Channel*/
+    Temp,    /**<Channel Name:AN14   Assigned to:Shared Channel*/
+    ICRIP,    /**<Channel Name:AN15   Assigned to:Shared Channel*/
+    MAX_CHANNELS = 5,    /**< MAX_CHANNELS will be removed in future MCC releases. Use ADC_MAX_CHANNELS instead */
+    ADC_MAX_CHANNELS = 5    /**< Maximum number of channels configured by user in MCC Melody User Interface */
 };
 
 

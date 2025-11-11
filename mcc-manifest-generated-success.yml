@@ -2,7 +2,7 @@
 
 manifest_file_version: 1.0.0
 project: Test_OtherProcessor
-creation_date: 2025-10-30T16:34:03.470-05:00[America/Chicago]
+creation_date: 2025-11-07T14:18:37.937-06:00[America/Chicago]
 operating_system: Windows 11
 mcc_mode: IDE
 mcc_mode_version: v6.25
@@ -21,7 +21,6 @@ modules:
 - {name: '@mchp-mcc/clock-16bit-driver', type: MELODY, version: 1.2.1}
 - {name: '@mchp-mcc/dmt-16bit-driver', type: MELODY, version: 1.0.7}
 - {name: '@mchp-mcc/dspic33-configuration-bits', type: MELODY, version: 1.2.3}
-- {name: '@mchp-mcc/example-dspic-adc', type: MELODY, version: 1.0.0}
 - {name: '@mchp-mcc/icd-16bit-driver', type: MELODY, version: 1.0.3}
 - {name: '@mchp-mcc/main-16bit-manager', type: MELODY, version: 1.1.3}
 - {name: '@mchp-mcc/pic-16bit', type: MELODY, version: 5.13.6}
@@ -33,8 +32,11 @@ modules:
 - {name: '@mchp-mcc/pic24-dspic33-pwm-pc-upb', type: MELODY, version: 2.5.1}
 - {name: '@mchp-mcc/pic24-dspic33-reset', type: MELODY, version: 1.1.1}
 - {name: '@mchp-mcc/pic24-dspic33-spi-i2s-upb', type: MELODY, version: 1.4.0}
+- {name: '@mchp-mcc/pic24-dspic33-uart-protocol-upb', type: MELODY, version: 1.5.2}
 - {name: '@mchp-mcc/pic24-dspic33-wdt-upb-v1', type: MELODY, version: 1.2.1}
 - {name: '@mchp-mcc/pin-content-processor', type: MELODY, version: 3.11.0}
 - {name: '@mchp-mcc/pwm-hs-driver', type: MELODY, version: 2.3.1}
 - {name: '@mchp-mcc/spi-client-driver', type: MELODY, version: 1.2.1}
+- {name: '@mchp-mcc/spi-host-driver', type: MELODY, version: 1.3.0}
+- {name: '@mchp-mcc/uart-driver', type: MELODY, version: 1.10.2}
 - {name: '@mchp-mcc/wdt-16bit-driver', type: MELODY, version: 1.0.9}

@@ -15,6 +15,11 @@ build/default/production/mcc_generated_files/system/src/system.o: \
  mcc_generated_files/system/src/../../pwm_hs/pwm_hs_interface.h \
  mcc_generated_files/system/src/../../spi_client/spi1.h \
  mcc_generated_files/system/src/../../spi_client/spi_client_interface.h \
+ mcc_generated_files/system/src/../../spi_host/spi2.h \
+ mcc_generated_files/system/src/../../spi_host/spi_host_interface.h \
+ mcc_generated_files/system/src/../../uart/uart2.h \
+ mcc_generated_files/system/src/../../uart/uart_interface.h \
+ mcc_generated_files/system/src/../../uart/uart_types.h \
  mcc_generated_files/system/src/../interrupt.h
 
 mcc_generated_files/system/src/../system.h:
@@ -46,5 +51,15 @@ mcc_generated_files/system/src/../../pwm_hs/pwm_hs_interface.h:
 mcc_generated_files/system/src/../../spi_client/spi1.h:
 
 mcc_generated_files/system/src/../../spi_client/spi_client_interface.h:
+
+mcc_generated_files/system/src/../../spi_host/spi2.h:
+
+mcc_generated_files/system/src/../../spi_host/spi_host_interface.h:
+
+mcc_generated_files/system/src/../../uart/uart2.h:
+
+mcc_generated_files/system/src/../../uart/uart_interface.h:
+
+mcc_generated_files/system/src/../../uart/uart_types.h:
 
 mcc_generated_files/system/src/../interrupt.h:

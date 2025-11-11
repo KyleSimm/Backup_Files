@@ -10,7 +10,6 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>.</sourceRootElem>
-                <sourceRootElem>../CapstoneFirmware.X</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
