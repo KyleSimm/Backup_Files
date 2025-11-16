@@ -18,6 +18,8 @@ extern "C" {
 extern uint16_t sensorData[NUM_SENSORS];
 extern enum ADC_CHANNEL channels[NUM_SENSORS];
 
+void sensor_init(void);
+
 void updateSensorData(void);
 
 void printSensorData(void);

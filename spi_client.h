@@ -11,12 +11,16 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-   #define SPI_RX_BUFFER_SIZE 5  // 1 command + up to 4 data bytes
+    #include <stdbool.h>
+    #include <stdint.h>
 
+    #define SPI_RX_BUFFER_SIZE 5  // 1 command + up to 4 data bytes
+
+    extern volatile bool spiReady;
     extern volatile uint8_t spiRxBuffer[SPI_RX_BUFFER_SIZE];
     extern volatile uint8_t spiRxCount;
     extern volatile uint8_t spiExpected;
-    extern volatile bool spiReady;
+
     
     uint8_t spi_read(void);
     void spi_write(uint8_t data);

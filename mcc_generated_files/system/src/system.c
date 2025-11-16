@@ -39,6 +39,7 @@
 #include "../../pwm_hs/pwm.h"
 #include "../../spi_client/spi1.h"
 #include "../../spi_host/spi2.h"
+#include "../../timer/tmr1.h"
 #include "../../uart/uart2.h"
 #include "../interrupt.h"
 
@@ -52,6 +53,7 @@ void SYSTEM_Initialize(void)
     PWM_Initialize();
     SPI1_Initialize();
     SPI2_Initialize();
+    TMR1_Initialize();
     UART2_Initialize();
     INTERRUPT_GlobalEnable();
     INTERRUPT_Initialize();

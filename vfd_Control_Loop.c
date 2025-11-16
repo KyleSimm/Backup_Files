@@ -4,9 +4,12 @@
 #include <stdio.h>
 
 // {index, stepSize, direction}
-static PWM_State my_pwm_A = {0,.08,1};                      // 0   phase shift
-static PWM_State my_pwm_B = {table_Size / 3, .08, 1};       // 120 phase shift
-static PWM_State my_pwm_C = {2 * table_Size / 3, .08, 1};   // 240 Phase shift
+#define PHASE_SHIFT ((TABLE_SIZE + 1) / 3)  // rounds 512/3 ? 171
+
+static PWM_State my_pwm_A = { .index = 0 << 8,            .step_size = 0, .direction = FORWARD };
+static PWM_State my_pwm_B = { .index = PHASE_SHIFT << 8,  .step_size = 0, .direction = FORWARD };
+static PWM_State my_pwm_C = { .index = (2 * PHASE_SHIFT) << 8, .step_size = 0, .direction = FORWARD };
+
 
 /*
  Initialized PWM Channels.
@@ -14,27 +17,32 @@ static PWM_State my_pwm_C = {2 * table_Size / 3, .08, 1};   // 240 Phase shift
 void vfd_Init(void)
 {
     
-    init_sine_table(); 
+    //init_sine_table(); 
 
-    //PWM Set to 5 Hz
-    float initialFreq = 10.0f;
+    //PWM Set to 10 Hz
+    float initialFreq = 1.0f;
     vfd_SetFrequency(initialFreq); //Also Sets StepSize
-    //setPWM_Cycle(1, 1);
+    
+    //Set PHase
+    PG1PHASE = 0x0;
+    PG2PHASE = 0x0;
+    PG3PHASE = 0x0;
     printf("after set freq command \n");
 
     // Register PWM EOC callback
-    //IFS4bits.PWM1IF = 0; 
     PWM_GeneratorEOCEventCallbackRegister(MyPWMInterrupt);
 
-    // Do all setup first
-    PG1CONLbits.ON = 1;
-    PG2CONLbits.ON = 1;
-    PG3CONLbits.ON = 1;
-
+    
     // Clear and then enable interrupt last
     IFS4bits.PWM1IF = 0;
     IEC4bits.PWM1IE = 1;
     __builtin_enable_interrupts();
+    
+    // Enable PWM
+    PG1CONLbits.ON = 1;
+    PG2CONLbits.ON = 1;
+    PG3CONLbits.ON = 1;
+    
     printf("Leaving vfd_Init() \r\n");
 }
 
@@ -75,25 +83,16 @@ void vfd_SetDirection(Direction direct){
 void MyPWMInterrupt(enum PWM_GENERATOR genNum)
 {   
     IFS4bits.PWM1IF = 0; 
-
-    
-    uint16_t dutyA; 
-    uint16_t dutyB;
-    uint16_t dutyC; 
     
     switch(currentMode){
-        IFS4bits.PWM1IF = 0; 
-        
         case MODE_ON: //Changes Duty Cycle when Turned ON
-            dutyA = pwm_NextVal(&my_pwm_A);
-            dutyB = pwm_NextVal(&my_pwm_B);
-            dutyC = pwm_NextVal(&my_pwm_C);
-
-            // Update PWM registers
-            setPWM_Cycle(1, dutyA);
-            setPWM_Cycle(2, dutyB);
-            setPWM_Cycle(3, dutyC);
-            
+            PG1DC = pwm_NextVal(&my_pwm_A);
+            PG2DC = pwm_NextVal(&my_pwm_B);
+            PG3DC = pwm_NextVal(&my_pwm_C);
+            PG1STATbits.UPDREQ = 1;
+            PG2STATbits.UPDREQ = 1;
+            PG3STATbits.UPDREQ = 1;
+         
             break;
             
         default:

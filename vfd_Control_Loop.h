@@ -32,6 +32,7 @@ void vfd_SetFrequency(float freq);
 
 // Set direction (FORWARD/REVERSE)
 void vfd_SetDirection(Direction direct);
+void vfd_setDutyCycle(float percent);
 
 void MyPWMInterrupt(enum PWM_GENERATOR genNum);
 

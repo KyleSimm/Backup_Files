@@ -1,52 +1,82 @@
-#include <xc.h>
 #include "pwm_Lookup.h"
-#include <stdint.h>
 #include <math.h>
 
-// Example table of frequency ? period values
-//Change to 256++ Values
-uint16_t sine_table[table_Size];
+uint16_t sine_table[TABLE_SIZE] = {
+200, 202, 204, 207, 209, 212, 214, 217, 219, 221, 224, 226, 229, 231, 234, 236,
+238, 241, 243, 246, 248, 250, 253, 255, 257, 260, 262, 264, 267, 269, 271, 274,
+276, 278, 280, 283, 285, 287, 289, 291, 294, 296, 298, 300, 302, 304, 306, 308,
+310, 312, 314, 316, 318, 320, 322, 324, 326, 328, 330, 332, 333, 335, 337, 339,
+341, 342, 344, 346, 347, 349, 351, 352, 354, 355, 357, 358, 360, 361, 363, 364,
+365, 367, 368, 369, 371, 372, 373, 374, 375, 377, 378, 379, 380, 381, 382, 383,
+384, 385, 386, 386, 387, 388, 389, 390, 390, 391, 392, 392, 393, 394, 394, 395,
+395, 396, 396, 396, 397, 397, 397, 398, 398, 398, 398, 399, 399, 399, 399, 399,
+399, 399, 399, 399, 399, 399, 398, 398, 398, 398, 397, 397, 397, 396, 396, 396,
+395, 395, 394, 394, 393, 392, 392, 391, 390, 390, 389, 388, 387, 386, 386, 385,
+384, 383, 382, 381, 380, 379, 378, 377, 375, 374, 373, 372, 371, 369, 368, 367,
+365, 364, 363, 361, 360, 358, 357, 355, 354, 352, 351, 349, 347, 346, 344, 342,
+341, 339, 337, 335, 333, 332, 330, 328, 326, 324, 322, 320, 318, 316, 314, 312,
+310, 308, 306, 304, 302, 300, 298, 296, 294, 291, 289, 287, 285, 283, 280, 278,
+276, 274, 271, 269, 267, 264, 262, 260, 257, 255, 253, 250, 248, 246, 243, 241,
+238, 236, 234, 231, 229, 226, 224, 221, 219, 217, 214, 212, 209, 207, 204, 202,
+200, 197, 195, 192, 190, 187, 185, 182, 180, 178, 175, 173, 170, 168, 165, 163,
+161, 158, 156, 153, 151, 149, 146, 144, 142, 139, 137, 135, 132, 130, 128, 125,
+123, 121, 119, 116, 114, 112, 110, 108, 105, 103, 101,  99,  97,  95,  93,  91,
+ 89,  87,  85,  83,  81,  79,  77,  75,  73,  71,  69,  67,  66,  64,  62,  60,
+ 58,  57,  55,  53,  52,  50,  48,  47,  45,  44,  42,  41,  39,  38,  36,  35,
+ 34,  32,  31,  30,  28,  27,  26,  25,  24,  22,  21,  20,  19,  18,  17,  16,
+ 15,  14,  13,  13,  12,  11,  10,   9,   9,   8,   7,   7,   6,   5,   5,   4,
+  4,   3,   3,   3,   2,   2,   2,   1,   1,   1,   1,   0,   0,   0,   0,   0,
+  0,   0,   0,   0,   0,   0,   1,   1,   1,   1,   2,   2,   2,   3,   3,   3,
+  4,   4,   5,   5,   6,   7,   7,   8,   9,   9,  10,  11,  12,  13,  13,  14,
+ 15,  16,  17,  18,  19,  20,  21,  22,  24,  25,  26,  27,  28,  30,  31,  32,
+ 34,  35,  36,  38,  39,  41,  42,  44,  45,  47,  48,  50,  52,  53,  55,  57,
+ 58,  60,  62,  64,  66,  67,  69,  71,  73,  75,  77,  79,  81,  83,  85,  87,
+ 89,  91,  93,  95,  97,  99, 101, 103, 105, 108, 110, 112, 114, 116, 119, 121,
+123, 125, 128, 130, 132, 135, 137, 139, 142, 144, 146, 149, 151, 153, 156, 158,
+161, 163, 165, 168, 170, 173, 175, 178, 180, 182, 185, 187, 190, 192, 195, 197
+};
 
-void init_sine_table(void) {
-    for(int i = 0; i < table_Size; i++) {
-        sine_table[i] = (uint16_t)((sin(2.0 * M_PI * i / table_Size) + 1.0) * 0.5 * pwm_Max + 0.5);
+#define FP_TABLE_SIZE  (TABLE_SIZE << 4)   // Fixed-point table size
+uint32_t isr_rate = 10000;                // 10 kHz ISR
+
+/*
+void init_sine_table(void)
+{
+    for (int i = 0; i < TABLE_SIZE; i++)
+    {
+        sine_table[i] =
+            (uint16_t)((sin(2.0 * M_PI * i / TABLE_SIZE) + 1.0) *
+                       0.5 * PWM_MAX + 0.5);
     }
+} */
+
+static inline void pwm_nextIndex(PWM_State *state)
+{
+    if(state->direction == FORWARD)
+        state->index += state->step_size;
+    else
+        state->index -= state->step_size;
+
+    if(state->index >= FP_TABLE_SIZE)
+        state->index -= FP_TABLE_SIZE;
+    else if((int32_t)state->index < 0)
+        state->index += FP_TABLE_SIZE;
 }
-
-
-//Duty Size?
-#define TABLE_SIZE 256  // Must be a power of two
-#define TABLE_MASK (TABLE_SIZE - 1)
-#define TABLE_LIMIT (TABLE_SIZE << 8)
 
 uint16_t pwm_NextVal(PWM_State *state)
 {
-    uint16_t i = (state->index >> 8) & TABLE_MASK;
-    uint8_t frac = state->index & 0xFF;
+    uint16_t table_index = state->index >> 4;
+    if(table_index >= TABLE_SIZE) table_index = TABLE_SIZE - 1;
 
-    uint16_t s0 = sine_table[i];
-    uint16_t s1 = sine_table[(i + 1) & TABLE_MASK];
-
-    // Linear interpolation
-    uint16_t value = s0 + (((uint32_t)(s1 - s0) * frac) >> 8);
-
-    // Direction and wrapping combined
-    state->index += (state->direction == FORWARD) ? state->step_size : -state->step_size;
-
-    // Faster wrap using mask (assuming TABLE_LIMIT = TABLE_SIZE << 8)
-    state->index &= (TABLE_LIMIT - 1);
+    uint16_t value = sine_table[table_index];
+    pwm_nextIndex(state);
 
     return value;
 }
 
-
-
-
-//Frequency
-#define PWM_FREQ 16000.0f
-void pwm_UpdateFreq(PWM_State *state, float frequency)
+void pwm_UpdateFreq(PWM_State *state, float freq)
 {
-    // updateRate = how many times per second pwm_nextVal() is called
-    state->step_size = frequency * table_Size / PWM_FREQ  ; //Currently 16KHz frequency
+    float step = (freq * FP_TABLE_SIZE) / PWM_FREQ;
+    if(step < 1.0f) step = 1.0f;   // ensure we always advance
+    state->step_size = (uint32_t)step;
 }
-

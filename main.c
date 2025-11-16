@@ -1,30 +1,3 @@
-/*
-� [2025] Microchip Technology Inc. and its subsidiaries.
-
-    Subject to your compliance with these terms, you may use Microchip 
-    software and any derivatives exclusively with Microchip products. 
-    You are responsible for complying with 3rd party license terms  
-    applicable to your use of 3rd party software (including open source  
-    software) that may accompany Microchip software. SOFTWARE IS ?AS IS.? 
-    NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS 
-    SOFTWARE, INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT,  
-    MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT 
-    WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
-    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY 
-    KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF 
-    MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE 
-    FORESEEABLE. TO THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP?S 
-    TOTAL LIABILITY ON ALL CLAIMS RELATED TO THE SOFTWARE WILL NOT 
-    EXCEED AMOUNT OF FEES, IF ANY, YOU PAID DIRECTLY TO MICROCHIP FOR 
-    THIS SOFTWARE.
-*/
-#include "mcc_generated_files/system/system.h"
-
-
-/*
-    Main application
-*/
-
 /* PIN MAPPING FOR dsPIC33CK1024MP710 && dsPIC33CK256MP508
  * ---|-------------|------------------|------------------|-----------------------------------------*
  * ---|  Pin Number |Pin Number: 256   |   Pin Type       |---Purpose------------------------------*
@@ -92,129 +65,226 @@
  *    
  */
 
-/* Notes
- Serial Port for printf: COM11
- */
+
 #define FCY 8000000UL
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <xc.h>
+#include <stdio.h>
+#include <string.h>
 #include <libpic30.h>
-//Header/Custom Files
+
+#include "mcc_generated_files/system/system.h"
+
+#include "spi_client.h"         // SPI1 slave
+#include "spi_test.h"           // SPI2 master
 #include "vfd_Control_Loop.h"
-#include "spi_client.h"
 #include "system_mode.h"
+#include "timing.h"
 
+/******************************************************************************
+ * SYSTEM MODE STATE
+ ******************************************************************************/
+SystemMode currentMode = MODE_INIT;
 
-SystemMode currentMode = MODE_INIT;  // start in idle mode
+/******************************************************************************
+ * SPI2 MASTER TEST STATE MACHINE
+ ******************************************************************************/
+typedef enum {
+    MASTER_STATE_SEND_ON = 0,
+    MASTER_STATE_WAIT_AFTER_ON,
+    MASTER_STATE_SEND_10HZ,
+    MASTER_STATE_WAIT_AFTER_10HZ,
+    MASTER_STATE_SEND_20HZ,
+    MASTER_STATE_WAIT_AFTER_20HZ,
+    MASTER_STATE_SEND_OFF,
+    MASTER_STATE_WAIT_AFTER_OFF
+} MasterState_t;
 
+static MasterState_t masterState = MASTER_STATE_SEND_ON;
+static uint32_t masterStateTimestamp = 0;
 
+/* debug tracking */
+static uint8_t lastMasterModeSent = 0xFF;
+static float   lastMasterFreqSent = -1.f;
+
+/* delays */
+#define MASTER_DELAY_AFTER_ON_MS     500
+#define MASTER_DELAY_AFTER_10HZ_MS   500
+#define MASTER_DELAY_AFTER_20HZ_MS   500
+#define MASTER_DELAY_AFTER_OFF_MS    500
+
+static void masterTick(void);
+
+/******************************************************************************
+ * MAIN
+ ******************************************************************************/
 int main(void)
 {
     SYSTEM_Initialize();
-    //PWM_Deinitialize();
-    spi_init();
-            
+
+    spi_init();                // SPI1 slave init
+    //spi_master2_init();        // SPI2 master init
+    sensor_init();
+    printf("\r\n=== SYSTEM BOOT COMPLETE ===\r\n");
+
     currentMode = MODE_INIT;
-
-    /* Loop Error?
-     * MODEON: No Issues
-     * MODEINIT: Issue inside
-     
-     */
-    printf("Entering While Loop \r\n");
-    while(1)
+    //masterState = MASTER_STATE_SEND_ON;
+    //masterStateTimestamp = millis();
+    
+    //PWM_Initialize();
+    //vfd_Init();
+    
+    while (1)
     {
-        printf("Current State: %s\n", modeToString(currentMode));
-        
-        switch(currentMode){
-            printf("Inside CurrentMode \r\n");
+        printf("Test");
+        /**********************
+         * NORMAL OPERATION
+         **********************/
+        switch (currentMode)
+        {
             case MODE_INIT:
-            
-                //Initializes PWM Channels
+                printf("[SYS] MODE_INIT: Initializing PWM + VFD\r\n");
+
                 PWM_Initialize();
-                //printf("Testing if PWM Initialized \r\n");
                 vfd_Init();
-                //printf("Testing if vfd Initialized \r\n");
-                currentMode = MODE_ON;
-                printf("Switching Mode to On \r\n\n");
 
+                currentMode = MODE_ON;
+                printf("[SYS] Entering MODE_ON\r\n");
                 break;
-                
-            case MODE_OFF:
-                //Disable PWM Channels
-                PWM_Deinitialize();
-                //Set Duty Cycle to 0%
-                vfd_setDutyCycle(0);
-                //Change Mode
-                currentMode = MODE_IDLE;
-                printf("Turning System Off, PWM output stopped \r\n");
-                
-                break;
-                
+
             case MODE_ON:
-                //Check for OFF Signal
-                spi_checkChannel();
-                //Check for new Frequency
-                //Read Sensor Data
-                spi_sendChannel();
-                //Send Sensor Data over SPI
-                
-                printf("Inside MODE_ON!\r\n \r\n");
+                printf("Mode On Cycle \r\n");
+                /* --- SPI1 SLAVE RX --- */
+                spi_checkChannel(); // prints when receiving a command
+
+                /* --- SEND SENSOR TELEMETRY --- */
+//                printf("[SLAVE TX] Sending telemetry packet\r\n");
+//                spi_sendChannel();
 
                 break;
-                
-            case MODE_IDLE:
-                //Check SPI Connection for "ON" signal;
-                spi_checkChannel();  
-                printf("Code is IDle \r\n");
-                break;
-            case MODE_REVERSE:
-                printf("In Reverse Mode \r\n");
-                //Set PWM Duty Cycle to 0 percent
+
+            case MODE_OFF:
+                printf("[SYS] MODE_OFF ? Shutting down PWM\r\n");
+
+                PWM_Deinitialize();
                 vfd_setDutyCycle(0);
-                //Set PWM to LOW:
-                // Force all PWM outputs LOW
-                PG1IOCONLbits.OVRENH = 1;
-                PG1IOCONLbits.OVRENL = 1;
-                PG1IOCONLbits.OVRDAT = 0b00;
+                currentMode = MODE_IDLE;
 
-                PG2IOCONLbits.OVRENH = 1;
-                PG2IOCONLbits.OVRENL = 1;
-                PG2IOCONLbits.OVRDAT = 0b00;
+                printf("[SYS] Entering MODE_IDLE\r\n");
+                break;
 
-                PG3IOCONLbits.OVRENH = 1;
-                PG3IOCONLbits.OVRENL = 1;
-                PG3IOCONLbits.OVRDAT = 0b00;
-     
-                //Wait 2 ms.
-                 __delay_ms(3);
-                //Adjust Values
+            case MODE_IDLE:
+                printf("Idle Mode \r\n");
+                spi_checkChannel(); // still listens for "ON" command
+                break;
+
+            case MODE_REVERSE:
+                printf("[SYS] MODE_REVERSE: forcing safe LOW + reversing\r\n");
+
+                vfd_setDutyCycle(0);
+
+                PG1IOCONLbits.OVRENH = 1; PG1IOCONLbits.OVRENL = 1;
+                PG2IOCONLbits.OVRENH = 1; PG2IOCONLbits.OVRENL = 1;
+                PG3IOCONLbits.OVRENH = 1; PG3IOCONLbits.OVRENL = 1;
+
+                PG1IOCONLbits.OVRDAT = 0;
+                PG2IOCONLbits.OVRDAT = 0;
+                PG3IOCONLbits.OVRDAT = 0;
+
+                __delay_ms(3);
+
                 vfd_SetDirection(-1);
-                
-                // Release overrides
-                PG1IOCONLbits.OVRENH = 0;
-                PG1IOCONLbits.OVRENL = 0;
 
-                PG2IOCONLbits.OVRENH = 0;
-                PG2IOCONLbits.OVRENL = 0;
+                PG1IOCONLbits.OVRENH = 0; PG1IOCONLbits.OVRENL = 0;
+                PG2IOCONLbits.OVRENH = 0; PG2IOCONLbits.OVRENL = 0;
+                PG3IOCONLbits.OVRENH = 0; PG3IOCONLbits.OVRENL = 0;
 
-                PG3IOCONLbits.OVRENH = 0;
-                PG3IOCONLbits.OVRENL = 0;   
-                
-                //Set Mode back to ON
                 currentMode = MODE_ON;
+                break;
+
+            default:
+                currentMode = MODE_IDLE;
                 break;
         }
-                 
-         __delay_ms(300); //So Testing printf is possible to read.
-        //Testing Code
+
+        /**********************
+         * SPI2 MASTER TEST
+         **********************/
+        //masterTick();
+
+        __delay_ms(40);  // lightweight cooperative delay
     }
-  
-    
-    
 
     return 0;
+}
+
+/******************************************************************************
+ * SPI2 MASTER TEST STATE MACHINE
+ ******************************************************************************/
+static void masterTick(void)
+{
+    uint32_t now = millis();
+
+    switch (masterState)
+    {
+        case MASTER_STATE_SEND_ON:
+            spi_master2_sendMode(1);
+            printf("[MASTER TX] Sending CMD: MODE = ON\r\n");
+            lastMasterModeSent = 1;
+
+            masterStateTimestamp = now;
+            masterState = MASTER_STATE_WAIT_AFTER_ON;
+            break;
+
+        case MASTER_STATE_WAIT_AFTER_ON:
+            if (now - masterStateTimestamp >= MASTER_DELAY_AFTER_ON_MS)
+                masterState = MASTER_STATE_SEND_10HZ;
+            break;
+
+        case MASTER_STATE_SEND_10HZ:
+            spi_master2_sendFrequency(10.f);
+            printf("[MASTER TX] Sending CMD: FREQ = 10 Hz\r\n");
+            lastMasterFreqSent = 10.f;
+
+            masterStateTimestamp = now;
+            masterState = MASTER_STATE_WAIT_AFTER_10HZ;
+            break;
+
+        case MASTER_STATE_WAIT_AFTER_10HZ:
+            if (now - masterStateTimestamp >= MASTER_DELAY_AFTER_10HZ_MS)
+                masterState = MASTER_STATE_SEND_20HZ;
+            break;
+
+        case MASTER_STATE_SEND_20HZ:
+            spi_master2_sendFrequency(20.f);
+            printf("[MASTER TX] Sending CMD: FREQ = 20 Hz\r\n");
+            lastMasterFreqSent = 20.f;
+
+            masterStateTimestamp = now;
+            masterState = MASTER_STATE_WAIT_AFTER_20HZ;
+            break;
+
+        case MASTER_STATE_WAIT_AFTER_20HZ:
+            if (now - masterStateTimestamp >= MASTER_DELAY_AFTER_20HZ_MS)
+                masterState = MASTER_STATE_SEND_OFF;
+            break;
+
+        case MASTER_STATE_SEND_OFF:
+            spi_master2_sendMode(0);
+            printf("[MASTER TX] Sending CMD: MODE = OFF\r\n");
+            lastMasterModeSent = 0;
+
+            masterStateTimestamp = now;
+            masterState = MASTER_STATE_WAIT_AFTER_OFF;
+            break;
+
+        case MASTER_STATE_WAIT_AFTER_OFF:
+            if (now - masterStateTimestamp >= MASTER_DELAY_AFTER_OFF_MS)
+                masterState = MASTER_STATE_SEND_ON;   // restart test cycle
+            break;
+
+        default:
+            masterState = MASTER_STATE_SEND_ON;
+            break;
+    }
 }

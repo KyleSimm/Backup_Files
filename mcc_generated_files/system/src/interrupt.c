@@ -83,6 +83,10 @@ void INTERRUPT_Initialize(void)
     // Priority: 1
     IPC43bits.PEVTDIP = 1;
     
+    // T1: Timer 1
+    // Priority: 1
+    IPC0bits.T1IP = 1;
+    
 }
 
 void INTERRUPT_Deinitialize(void)
@@ -98,4 +102,5 @@ void INTERRUPT_Deinitialize(void)
     IPC42bits.PEVTBIP = 4;
     IPC42bits.PEVTCIP = 4;
     IPC43bits.PEVTDIP = 4;
+    IPC0bits.T1IP = 4;
 }

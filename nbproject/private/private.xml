@@ -4,12 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/kyler/Projects%20Folder/CapstoneFirmware256.X/main.c</file>
-            <file>file:/C:/Users/kyler/Projects%20Folder/CapstoneFirmware256.X/mcc_generated_files/pwm_hs/src/pwm.c</file>
             <file>file:/C:/Users/kyler/Projects%20Folder/CapstoneFirmware256.X/vfd_Control_Loop.c</file>
-            <file>file:/C:/Users/kyler/Projects%20Folder/CapstoneFirmware256.X/spi_client.h</file>
-            <file>file:/C:/Users/kyler/Projects%20Folder/CapstoneFirmware256.X/spi_client.c</file>
-            <file>file:/C:/Users/kyler/Projects%20Folder/CapstoneFirmware256.X/sensor.h</file>
-            <file>file:/C:/Users/kyler/Projects%20Folder/CapstoneFirmware256.X/sensor.c</file>
+            <file>file:/C:/Users/kyler/Projects%20Folder/CapstoneFirmware256.X/pwm_Lookup.c</file>
+            <file>file:/C:/Users/kyler/Projects%20Folder/CapstoneFirmware256.X/vfd_Control_Loop.h</file>
+            <file>file:/C:/Users/kyler/Projects%20Folder/CapstoneFirmware256.X/pwm_Lookup.h</file>
+            <file>file:/C:/Users/kyler/Projects%20Folder/CapstoneFirmware256.X/pwm_driver.c</file>
         </group>
     </open-files>
 </project-private>
