@@ -14,7 +14,7 @@
 #include "mcc_generated_files/system/system.h"
 #include "mcc_generated_files/adc/adc1.h"
 #include "mcc_generated_files/system/pins.h"
-
+#include "system_mode.h"
 #include "sensor.h"
 
 uint16_t sensorData[NUM_SENSORS] = {0};
@@ -64,6 +64,10 @@ void updateSensorData(void)
         //printf("Raw %d: %u\r\n", raw);
         // Convert to millivolts
         sensorData[i] = (uint16_t)(((uint32_t)raw * 3300) / 4095);
+        
+        if(sensorData[3] >= 2000){
+            currentMode = MODE_OFF;
+        }
         //printf("Sensor %d: %u\r\n", i, sensorData[i]);
 
     }

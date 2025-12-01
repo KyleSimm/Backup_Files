@@ -118,28 +118,50 @@ static void masterTick(void);
 /******************************************************************************
  * MAIN
  ******************************************************************************/
+
 int main(void)
 {
+    // Force RE14 as plain GPIO
+    ANSELEbits.ANSELE14 = 0;
+    TRISEbits.TRISE14 = 0;
+
+    while (1)
+    {
+        LATEbits.LATE14 ^= 1;   // toggle pin
+        __delay_ms(500);
+    }
+}
+
+int main3(void)
+{
+    printf("Test \r\n");
     SYSTEM_Initialize();
 
     spi_init();                // SPI1 slave init
-    //spi_master2_init();        // SPI2 master init
+    spi_master2_init();        // SPI2 master init
     sensor_init();
     printf("\r\n=== SYSTEM BOOT COMPLETE ===\r\n");
 
-    currentMode = MODE_INIT;
-    //masterState = MASTER_STATE_SEND_ON;
-    //masterStateTimestamp = millis();
+    //currentMode = MODE_IDLE;
+    masterState = MASTER_STATE_SEND_ON;
+    masterStateTimestamp = millis();
     
-    //PWM_Initialize();
-    //vfd_Init();
+    //LED for Testing RE14
+    TRISEbits.TRISE14 = 0;     // RE14 as output
+
+    //Demo Variable
+    int stage = 0;
+    LATEbits.LATE14 = 1;
     
     while (1)
     {
         printf("Test");
+         
+        
         /**********************
          * NORMAL OPERATION
          **********************/
+        
         switch (currentMode)
         {
             case MODE_INIT:
@@ -153,23 +175,32 @@ int main(void)
                 break;
 
             case MODE_ON:
-                printf("Mode On Cycle \r\n");
-                /* --- SPI1 SLAVE RX --- */
+                //printf("Mode On Cycle \r\n");
+                // --- SPI1 SLAVE RX --- 
                 spi_checkChannel(); // prints when receiving a command
 
-                /* --- SEND SENSOR TELEMETRY --- */
-//                printf("[SLAVE TX] Sending telemetry packet\r\n");
-//                spi_sendChannel();
+                // --- SEND SENSOR TELEMETRY --- 
+              //printf("[SLAVE TX] Sending telemetry packet\r\n");
+                //spi_sendChannel();
 
                 break;
 
             case MODE_OFF:
                 printf("[SYS] MODE_OFF ? Shutting down PWM\r\n");
 
-                PWM_Deinitialize();
-                vfd_setDutyCycle(0);
-                currentMode = MODE_IDLE;
+                // 1. Disable interrupt
+                IEC4bits.PWM1IE = 0;
+                IFS4bits.PWM1IF = 0;
 
+                // 2. Shutdown PWM outputs
+                PG1CONLbits.ON = 0;
+                PG2CONLbits.ON = 0;
+                PG3CONLbits.ON = 0;
+
+                // 3. Safe duty cycle
+                vfd_setDutyCycle(0);
+
+                currentMode = MODE_IDLE;
                 printf("[SYS] Entering MODE_IDLE\r\n");
                 break;
 
@@ -207,12 +238,31 @@ int main(void)
                 break;
         }
 
-        /**********************
-         * SPI2 MASTER TEST
-         **********************/
+        //**********************
+        // * SPI2 MASTER TEST
+        // **********************
         //masterTick();
-
-        __delay_ms(40);  // lightweight cooperative delay
+        
+        // **********************
+        //  TEMP Demo Show
+        // *********************
+        stage +=1;
+        if(stage == 10){
+            vfd_SetFrequency(20);
+            printf("Freq 20Hz");
+        } else if (stage == 20){
+            vfd_SetFrequency(40);
+            printf("Freq 40Hz");
+        } else if (stage == 30){
+            currentMode = MODE_OFF;
+            printf("OFF");
+        } else if (stage == 40){
+            currentMode = MODE_INIT;
+           printf("ON");
+            stage = 0;
+        }
+    
+        __delay_ms(300);  // lightweight cooperative delay
     }
 
     return 0;
